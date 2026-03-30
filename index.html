@@ -107,56 +107,96 @@
         </section>
 
         <section id="simulator" class="simulator-section">
-            <h2 class="section-title" data-scroll-reveal>Hardware Interface</h2>
+            <h2 class="section-title" data-scroll-reveal>Advanced Hardware Rig</h2>
             <div class="dashboard-panel glass-panel" data-scroll-reveal>
                 <div class="dash-header">
                     <div class="dash-status">
-                        <div class="status-dot"></div> System Online
+                        <div class="status-dot"></div> System Active
+                    </div>
+                    <div class="dash-tabs">
+                        <button class="tab-btn active" data-target="ldr">LDR (Photoresistor)</button>
+                        <button class="tab-btn" data-target="pd">Photodiode</button>
+                        <button class="tab-btn" data-target="pt">Phototransistor</button>
                     </div>
                     <div class="dash-toggles">
                         <label class="switch">
                             <input type="checkbox" id="ambient-toggle">
                             <span class="slider round"></span>
                         </label>
-                        <span class="toggle-label">Night Environment</span>
+                        <span class="toggle-label">Night Mode</span>
                     </div>
                 </div>
                 
-                <div class="dash-body">
-                    <div class="dash-controls">
-                        <div class="control-group">
-                            <label for="light-slider">Photon Injector Power</label>
+                <div class="dash-body simulator-panel">
+                    <!-- Left: Control & Telemetry -->
+                    <div class="sim-controls">
+                        <div class="control-group modern-slider">
+                            <label for="light-slider">Photon Injector Output</label>
                             <input type="range" id="light-slider" min="0" max="1000" value="0" step="5">
                             <div class="slider-metrics">
-                                <span>0</span>
-                                <span class="lcd-value"><span id="light-val">0</span> LX</span>
-                                <span>1K</span>
+                                <span>Dark</span>
+                                <span class="lcd-value glow-text"><span id="light-val">0</span> LX</span>
+                                <span>Max</span>
                             </div>
                         </div>
-                        <div class="sensor-readout glass-card">
-                            <div class="readout-label">LDR Internal Resistance</div>
-                            <div class="readout-value" id="res-val">∞ Ω</div>
+
+                        <div class="telemetry-grid">
+                            <div class="telemetry-card">
+                                <span class="t-label">Source Voltage</span>
+                                <span class="t-value">9.00 V</span>
+                            </div>
+                            <div class="telemetry-card">
+                                <span class="t-label" id="primary-out-label">Internal Resistance</span>
+                                <span class="t-value" id="primary-out-val">∞ Ω</span>
+                            </div>
+                            <div class="telemetry-card">
+                                <span class="t-label">Current Draw</span>
+                                <span class="t-value" id="current-val">0.00 mA</span>
+                            </div>
+                            <div class="telemetry-card">
+                                <span class="t-label">Power Dissipated</span>
+                                <span class="t-value" id="power-val">0.00 mW</span>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="dash-visualizer" id="dash-viz">
-                        <div class="circuit-board">
-                            <!-- Circuit traces -->
-                            <svg class="traces" viewBox="0 0 300 200">
-                                <path d="M50 100 L 100 100 L 100 50 L 200 50 L 200 150 L 100 150 L 100 100" stroke="rgba(0, 242, 254, 0.2)" stroke-width="2" fill="none"/>
+                    <!-- Right: Visualizer & Oscilloscope -->
+                    <div class="sim-visuals" id="dash-viz">
+                        <div class="circuit-board holographic">
+                            <div class="laser-emitter">
+                                <div class="laser-beam" id="laser-beam"></div>
+                            </div>
+                            
+                            <!-- Glowing SVG Traces -->
+                            <svg class="traces active-trace" viewBox="0 0 400 200">
+                                <path class="trace-line" id="circuit-path" d="M 50 100 L 150 100 L 150 50 L 250 50 L 250 150 L 150 150 Z" />
+                                <circle cx="150" cy="50" r="5" class="trace-node"/>
+                                <circle cx="250" cy="150" r="5" class="trace-node"/>
                             </svg>
+
                             <div class="component psu">
                                 <span class="comp-label">9V DC</span>
                             </div>
-                            <div class="component ldr-node">
-                                <div id="ldr-glare"></div>
-                                <span class="comp-label">GL5528</span>
+                            <div class="component test-node" id="active-component">
+                                <div id="comp-glare"></div>
+                                <span class="comp-label" id="comp-name">GL5528</span>
                             </div>
                             <div class="component led-node" id="sim-led">
                                 <div class="led-bulb"></div>
                             </div>
                         </div>
-                        <!-- Ambient lighting effect overlay -->
+
+                        <!-- Live Oscilloscope -->
+                        <div class="oscilloscope-wrapper">
+                            <div class="scope-header">
+                                <span><div class="status-dot"></div> Live Signal Trace</span>
+                                <span class="scope-scale">X: 10ms/div | Y: Auto</span>
+                            </div>
+                            <div class="scope-screen">
+                                <canvas id="oscilloscope" width="600" height="150"></canvas>
+                            </div>
+                        </div>
+                        
                         <div class="ambient-overlay" id="ambient-overlay"></div>
                     </div>
                 </div>
