@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Optoelectronic Learning Dashboard</title>
     <meta name="description" content="Next-Gen Interactive learning module for Optoelectronic Devices.">
     <!-- Google Fonts: Inter for Body, Outfit for Headings -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;700;800;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <!-- Animated Mesh Background -->
     <div class="bg-mesh">
@@ -37,9 +41,11 @@
         <div class="hero-content" data-scroll-reveal>
             <div class="badge">v2.0 Immersive Edition</div>
             <h1 class="glow-text">The Physics of Light <br>& Matter</h1>
-            <p>Experience Light Dependent Resistors, Photodiodes, and Phototransistors like never before through real-time hardware simulations.</p>
+            <p>Experience Light Dependent Resistors, Photodiodes, and Phototransistors like never before through
+                real-time hardware simulations.</p>
             <div class="btn-group">
-                <a href="#concepts" class="btn-primary btn-magnetic" aria-label="Start Learning"><span>Engage Module</span></a>
+                <a href="#concepts" class="btn-primary btn-magnetic" aria-label="Start Learning"><span>Engage
+                        Module</span></a>
                 <a href="#simulator" class="btn-secondary btn-magnetic"><span>Jump to Simulator</span></a>
             </div>
         </div>
@@ -64,7 +70,8 @@
                         <div class="card-glow"></div>
                         <div class="card-icon">💡</div>
                         <h3>Photoresistor (LDR)</h3>
-                        <p>Resistance sharply decreases when bombarded by photons. Perfect for ambient light-sensing applications.</p>
+                        <p>Resistance sharply decreases when bombarded by photons. Perfect for ambient light-sensing
+                            applications.</p>
                         <div class="animation-container">
                             <div class="ldr-particles"></div>
                             <div class="ldr-surface">R = f(Lux<sup>-γ</sup>)</div>
@@ -74,11 +81,12 @@
 
                 <!-- Photodiode -->
                 <article class="glass-card concept-card tilt-card" id="card-pd" data-scroll-reveal>
-                     <div class="card-inner">
+                    <div class="card-inner">
                         <div class="card-glow"></div>
                         <div class="card-icon">⚡</div>
                         <h3>Photodiode</h3>
-                        <p>Immediately converts light pulses into electrical current. Extremely fast response time; standard for optical fiber links.</p>
+                        <p>Immediately converts light pulses into electrical current. Extremely fast response time;
+                            standard for optical fiber links.</p>
                         <div class="animation-container">
                             <div class="pd-junction">
                                 <div class="photon">~</div>
@@ -94,7 +102,8 @@
                         <div class="card-glow"></div>
                         <div class="card-icon">🔋</div>
                         <h3>Phototransistor</h3>
-                        <p>Combines light-sensing with internal current amplification. Highly sensitive, capable of multiplying tiny inputs.</p>
+                        <p>Combines light-sensing with internal current amplification. Highly sensitive, capable of
+                            multiplying tiny inputs.</p>
                         <div class="animation-container">
                             <div class="pt-amplification">
                                 <div class="base-current"></div>
@@ -126,7 +135,7 @@
                         <span class="toggle-label">Night Mode</span>
                     </div>
                 </div>
-                
+
                 <div class="dash-body simulator-panel">
                     <!-- Left: Control & Telemetry -->
                     <div class="sim-controls">
@@ -159,19 +168,20 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Right: Visualizer & Oscilloscope -->
                     <div class="sim-visuals" id="dash-viz">
                         <div class="circuit-board holographic">
                             <div class="laser-emitter">
                                 <div class="laser-beam" id="laser-beam"></div>
                             </div>
-                            
+
                             <!-- Glowing SVG Traces -->
                             <svg class="traces active-trace" viewBox="0 0 400 200">
-                                <path class="trace-line" id="circuit-path" d="M 50 100 L 150 100 L 150 50 L 250 50 L 250 150 L 150 150 Z" />
-                                <circle cx="150" cy="50" r="5" class="trace-node"/>
-                                <circle cx="250" cy="150" r="5" class="trace-node"/>
+                                <path class="trace-line" id="circuit-path"
+                                    d="M 50 100 L 150 100 L 150 50 L 250 50 L 250 150 L 150 150 Z" />
+                                <circle cx="150" cy="50" r="5" class="trace-node" />
+                                <circle cx="250" cy="150" r="5" class="trace-node" />
                             </svg>
 
                             <div class="component psu">
@@ -189,14 +199,16 @@
                         <!-- Live Oscilloscope -->
                         <div class="oscilloscope-wrapper">
                             <div class="scope-header">
-                                <span><div class="status-dot"></div> Live Signal Trace</span>
+                                <span>
+                                    <div class="status-dot"></div> Live Signal Trace
+                                </span>
                                 <span class="scope-scale">X: 10ms/div | Y: Auto</span>
                             </div>
                             <div class="scope-screen">
                                 <canvas id="oscilloscope" width="600" height="150"></canvas>
                             </div>
                         </div>
-                        
+
                         <div class="ambient-overlay" id="ambient-overlay"></div>
                     </div>
                 </div>
@@ -207,42 +219,42 @@
             <h2 class="section-title" data-scroll-reveal>Matrix Analysis</h2>
             <div class="table-wrapper glass-panel tilt-card" data-scroll-reveal>
                 <div class="card-inner" style="padding: 0;">
-                <table class="compare-table">
-                    <thead>
-                        <tr>
-                            <th>Specification</th>
-                            <th>Photoresistor</th>
-                            <th>Photodiode</th>
-                            <th>Phototransistor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="highlight">Gain/Sensitivity</span></td>
-                            <td>High</td>
-                            <td>Low (No internal gain)</td>
-                            <td>Very High (hFE x PD sensitivity)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="highlight">Velocity (Speed)</span></td>
-                            <td>Lethargic (10 - 100ms)</td>
-                            <td>Hyper-Fast (Pico/Nanoseconds)</td>
-                            <td>Fast (Microseconds)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="highlight">Output Mechanism</span></td>
-                            <td>Variable Resistance (ΔR)</td>
-                            <td>Reverse Current (µA)</td>
-                            <td>Amplified Current (mA)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="highlight">Primary Utilization</span></td>
-                            <td>Twilight Switches, Auto-bright</td>
-                            <td>Data Comms (Li-Fi, Fiber), LiDAR</td>
-                            <td>Optoisolators, Encoders</td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <table class="compare-table">
+                        <thead>
+                            <tr>
+                                <th>Specification</th>
+                                <th>Photoresistor</th>
+                                <th>Photodiode</th>
+                                <th>Phototransistor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="highlight">Gain/Sensitivity</span></td>
+                                <td>High</td>
+                                <td>Low (No internal gain)</td>
+                                <td>Very High (hFE x PD sensitivity)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="highlight">Velocity (Speed)</span></td>
+                                <td>Lethargic (10 - 100ms)</td>
+                                <td>Hyper-Fast (Pico/Nanoseconds)</td>
+                                <td>Fast (Microseconds)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="highlight">Output Mechanism</span></td>
+                                <td>Variable Resistance (ΔR)</td>
+                                <td>Reverse Current (µA)</td>
+                                <td>Amplified Current (mA)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="highlight">Primary Utilization</span></td>
+                                <td>Twilight Switches, Auto-bright</td>
+                                <td>Data Comms (Li-Fi, Fiber), LiDAR</td>
+                                <td>Optoisolators, Encoders</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
@@ -250,7 +262,7 @@
         <section id="quiz" class="quiz-section">
             <h2 class="section-title" data-scroll-reveal>System Calibration</h2>
             <div class="glass-card quiz-container" id="quiz-container" data-scroll-reveal>
-                
+
                 <!-- Intro State -->
                 <div id="quiz-intro" class="quiz-step">
                     <div class="quiz-hero-icon">🧠</div>
@@ -262,8 +274,11 @@
                 <!-- Active Quiz State -->
                 <div id="quiz-area" class="quiz-step hidden">
                     <div class="quiz-header">
-                        <span class="question-tracker">Block <span id="q-current">1</span> / <span id="q-total">3</span></span>
-                        <div class="progress-bar-bg"><div class="progress-bar-fill" id="quiz-progress"></div></div>
+                        <span class="question-tracker">Block <span id="q-current">1</span> / <span
+                                id="q-total">3</span></span>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="quiz-progress"></div>
+                        </div>
                     </div>
                     <div class="quiz-body-wrapper">
                         <h3 id="question-text" class="question-title">Booting question...</h3>
@@ -291,7 +306,8 @@
         <div class="footer-glass">
             <div class="footer-content">
                 <div class="footer-brand">
-                    <div class="logo">Opto<span>Learn</span> <span style="font-size: 0.8rem; color: var(--text-muted)">v2.0</span></div>
+                    <div class="logo">Opto<span>Learn</span> <span
+                            style="font-size: 0.8rem; color: var(--text-muted)">v2.0</span></div>
                     <p>Pioneering interactive physics modules for the next generation of engineers.</p>
                 </div>
                 <div class="footer-links">
@@ -319,4 +335,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

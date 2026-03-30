@@ -74,60 +74,182 @@ document.addEventListener("DOMContentLoaded", () => {
         revealObserver.observe(el);
     });
 
-    // --- 4. Hardware Dashboard Simulation Logic ---
+    // --- 4. Max Level Hardware Simulation Logic ---
     const lightSlider = document.getElementById('light-slider');
     const lightValDisplay = document.getElementById('light-val');
-    const resValDisplay = document.getElementById('res-val');
+    const primaryOutLabel = document.getElementById('primary-out-label');
+    const primaryOutVal = document.getElementById('primary-out-val');
+    const currentValDisplay = document.getElementById('current-val');
+    const powerValDisplay = document.getElementById('power-val');
+    
+    const compName = document.getElementById('comp-name');
+    const compGlare = document.getElementById('comp-glare');
+    const laserBeam = document.getElementById('laser-beam');
     const simLed = document.getElementById('sim-led');
-    const ldrGlare = document.getElementById('ldr-glare');
+    const circuitPath = document.getElementById('circuit-path');
+    const activeTraceContainer = document.querySelector('.traces');
+    
     const ambientToggle = document.getElementById('ambient-toggle');
-    const ambientOverlay = document.getElementById('ambient-overlay');
+    const tabBtns = document.querySelectorAll('.tab-btn');
 
-    // Toggle Ambient Night Mode
+    // Canvas setup
+    const canvas = document.getElementById('oscilloscope');
+    const ctx = canvas.getContext('2d');
+    const traceData = Array(120).fill(0); // Holds the last 120 data points
+
+    let currentComponent = 'ldr';
+    
+    // Components specs
+    const specs = {
+        ldr: { name: 'GL5528 LDR', outLabel: 'Internal Resistance', unit: 'Ω' },
+        pd: { name: 'BPW34 Photodiode', outLabel: 'Reverse Current', unit: 'µA' },
+        pt: { name: 'BPX43 Phototransistor', outLabel: 'Amplified Current', unit: 'mA' }
+    };
+
+    // Tab Switching
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentComponent = e.target.getAttribute('data-target');
+            
+            compName.textContent = specs[currentComponent].name;
+            primaryOutLabel.textContent = specs[currentComponent].outLabel;
+            
+            // Trigger recalculation
+            triggerSimUpdate(lightSlider.value);
+        });
+    });
+
     ambientToggle.addEventListener('change', (e) => {
         if(e.target.checked) {
             document.documentElement.style.setProperty('--ambient-glow', '0.7');
-            document.querySelector('.dashboard-panel').style.boxShadow = 'inset 0 0 100px rgba(0,0,0,0.8)';
+            document.querySelector('.holographic').style.boxShadow = 'inset 0 0 100px rgba(0,242,254,0.1)';
         } else {
             document.documentElement.style.setProperty('--ambient-glow', '0');
-            document.querySelector('.dashboard-panel').style.boxShadow = 'none';
+            document.querySelector('.holographic').style.boxShadow = 'inset 0 0 30px rgba(0, 242, 254, 0.05)';
         }
     });
 
-    lightSlider.addEventListener('input', (e) => {
-        const lux = parseInt(e.target.value);
+    function triggerSimUpdate(luxValue) {
+        const lux = parseInt(luxValue);
         lightValDisplay.textContent = lux;
         
-        let resistance;
-        if (lux === 0) {
-            resistance = "∞ Ω"; // Dark resistance
-            simLed.style.boxShadow = `0 0 0px rgba(255, 234, 0, 0)`;
-            simLed.querySelector('.led-bulb').style.background = '#1a1a1a';
-            simLed.querySelector('.led-bulb').style.borderColor = '#333';
-            ldrGlare.style.opacity = 0;
-            
-        } else {
-            const resValue = Math.max(150, 1000000 / (lux * 10)); 
-            resistance = resValue > 1000 ? (resValue / 1000).toFixed(1) + " kΩ" : Math.floor(resValue) + " Ω";
-            
-            // Visual feedback mapping
-            const intensity = lux / 1000;
-            ldrGlare.style.opacity = intensity;
-            
-            const ledBulb = simLed.querySelector('.led-bulb');
+        let intensity = lux / 1000;
+        let pOutString = "";
+        let currentDraw_mA = 0;
+        let power_mW = 0;
+        
+        // Physics math models
+        if (currentComponent === 'ldr') {
+            if (lux === 0) {
+                pOutString = "∞ Ω";
+            } else {
+                const resValue = Math.max(150, 1000000 / (lux * 10)); 
+                pOutString = resValue > 1000 ? (resValue / 1000).toFixed(1) + " kΩ" : Math.floor(resValue) + " Ω";
+                currentDraw_mA = (9 / (resValue + 100)) * 1000; // Assume 100 ohm series led
+            }
+        } else if (currentComponent === 'pd') {
+            // Photodiode yields microamps
+            let uA = lux * 0.05; // Max 50uA
+            pOutString = uA.toFixed(1) + " " + specs.pd.unit;
+            currentDraw_mA = uA / 1000;
+        } else if (currentComponent === 'pt') {
+            // Phototransistor amplifies
+            let mA = lux * 0.02; // Max 20mA
+            pOutString = mA.toFixed(2) + " " + specs.pt.unit;
+            currentDraw_mA = mA;
+        }
+
+        power_mW = 9 * currentDraw_mA;
+
+        // Update DOM
+        primaryOutVal.textContent = lux === 0 && currentComponent === 'ldr' ? "∞ Ω" : pOutString;
+        currentValDisplay.textContent = currentDraw_mA.toFixed(2) + " mA";
+        powerValDisplay.textContent = power_mW.toFixed(2) + " mW";
+
+        // Laser & visual intensity updates
+        if(laserBeam) laserBeam.style.opacity = intensity;
+        if(compGlare) compGlare.style.opacity = intensity;
+
+        // LED Brightness
+        const ledBulb = simLed.querySelector('.led-bulb');
+        if (currentDraw_mA > 0.1) {
             ledBulb.style.background = `radial-gradient(circle, #ffea00, #ff8c00)`;
             ledBulb.style.borderColor = `#ffea00`;
-            
-            // Cast glow onto the circuit board
-            simLed.style.boxShadow = `0 0 ${40 + (intensity * 60)}px ` + `rgba(255, 234, 0, ${intensity})`;
-            
-            // If in night mode, bleed light onto the overlay
-            if(ambientToggle.checked) {
-                document.documentElement.style.setProperty('--ambient-glow', `${0.7 - (intensity * 0.4)}`);
-            }
+            simLed.style.boxShadow = `0 0 ${40 + (intensity * 60)}px rgba(255, 234, 0, ${Math.min(intensity * 2, 1)})`;
+            activeTraceContainer.classList.add('flowing');
+        } else {
+            ledBulb.style.background = '#111';
+            ledBulb.style.borderColor = '#333';
+            simLed.style.boxShadow = `none`;
+            activeTraceContainer.classList.remove('flowing');
         }
-        resValDisplay.textContent = resistance;
-    });
+        
+        // Feed oscilloscope map [0,1]
+        let norm = 0;
+        if(currentComponent === 'ldr') norm = Math.min(currentDraw_mA / 30, 1);
+        else if(currentComponent === 'pd') norm = Math.min(currentDraw_mA / 0.05, 1);
+        else if(currentComponent === 'pt') norm = Math.min(currentDraw_mA / 20, 1);
+        
+        currentTraceValue = norm;
+    }
+
+    let currentTraceValue = 0;
+    lightSlider.addEventListener('input', (e) => triggerSimUpdate(e.target.value));
+    
+    // Initialize
+    triggerSimUpdate(0);
+
+    // Oscilloscope Animation Loop
+    function drawOscilloscope() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw grid
+        ctx.strokeStyle = 'rgba(0, 255, 0, 0.1)';
+        ctx.lineWidth = 1;
+        for(let i=0; i<canvas.width; i+=40) {
+            ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+        }
+        for(let j=0; j<canvas.height; j+=30) {
+            ctx.beginPath(); ctx.moveTo(0, j); ctx.lineTo(canvas.width, j); ctx.stroke();
+        }
+
+        // Add some noise simulation
+        let noisyVal = currentTraceValue + (Math.random() * 0.02 - 0.01);
+        if(noisyVal < 0) noisyVal = 0;
+        
+        traceData.push(noisyVal);
+        traceData.shift();
+
+        // Draw trace line
+        ctx.strokeStyle = '#00ff00';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        
+        const sliceWidth = canvas.width / traceData.length;
+        let x = 0;
+        
+        for (let i = 0; i < traceData.length; i++) {
+            const v = traceData[i];
+            const y = canvas.height - (v * canvas.height * 0.9 + 5);
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+            x += sliceWidth;
+        }
+        
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#00ff00';
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        
+        requestAnimationFrame(drawOscilloscope);
+    }
+    
+    drawOscilloscope();
 
     // --- 5. Gamified Quiz System ---
     const quizData = [
