@@ -275,11 +275,20 @@
                 <div id="quiz-area" class="quiz-step hidden">
                     <div class="quiz-header">
                         <span class="question-tracker">Block <span id="q-current">1</span> / <span
-                                id="q-total">3</span></span>
+                                id="q-total">10</span></span>
                         <div class="progress-bar-bg">
                             <div class="progress-bar-fill" id="quiz-progress"></div>
                         </div>
                     </div>
+
+                    <div class="quiz-stats-row">
+                        <div class="timer-container">
+                            <div class="timer-bar" id="timer-bar"></div>
+                            <span class="timer-text" id="timer-text">15s</span>
+                        </div>
+                        <div class="streak-counter hidden" id="streak-counter">🔥 2x Combo!</div>
+                    </div>
+
                     <div class="quiz-body-wrapper">
                         <h3 id="question-text" class="question-title">Booting question...</h3>
                         <div class="options-grid" id="options">
@@ -291,9 +300,10 @@
                 <!-- Result State -->
                 <div id="quiz-result" class="quiz-step hidden">
                     <div class="success-ring" id="success-ring">
-                        <span id="score-display" class="glow-text">0</span><span class="score-max">/3</span>
+                        <span id="score-display" class="glow-text">0</span><span class="score-max">/10</span>
                     </div>
                     <h3 class="glow-text">Diagnostics Complete</h3>
+                    <div class="rank-badge" id="rank-badge">Evaluating Rank...</div>
                     <p id="result-message">Evaluation registered.</p>
                     <button class="btn-secondary btn-magnetic" id="restart-btn"><span>Recalibrate</span></button>
                 </div>
