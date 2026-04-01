@@ -1,5 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    // --- 0. Mobile Navigation ---
+    const hamburger = document.getElementById('hamburger-menu');
+    const navLinks = document.getElementById('nav-links');
+
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(n => n.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('active');
+        }));
+    }
+
     // --- 1. Global Interactivity: Smooth Scroll & Magnetic Buttons ---
 
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
